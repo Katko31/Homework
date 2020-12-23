@@ -66,7 +66,7 @@ class CreateSequence:
             prot = rna.get_protein() #rna.get_transcript()
             return None, rna, prot
             # return DNA()
-        elif 'ACDEFHIKLMNPQRSTVWY' in sequence: #если уникальных буквенных
+        elif check_prot(sequence):
             return None, None, Protein(name, sequence)
         else:
             dna = DNA(name, sequence)
@@ -75,7 +75,11 @@ class CreateSequence:
             return dna, rna, prot
             # return RNA()
 
-
+def check_prot(seq):
+    for i in seq:
+        if i in 'DEFHIKLMNPQRSVWY':
+            return True
+    return False
 
 class Sequence: #класс-родитель, в который мы передаем последовательность
     MOLL_MASS = 345

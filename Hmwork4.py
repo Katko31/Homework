@@ -4,18 +4,23 @@
     10. Добавить к классу последовательностей метод, который принимает в качестве аргумента функцию,
     задающую правила замены символов, и который заменяет по этому правилу символы в последовательности
     11. Модифицировать метод из предыдущей задачи так, что функция с правилом замены принимает не только
-    заменяемый символ, но и предыдущий thgjfngkfnjkgn
-
-    njvfjkndfkju776766
+    заменяемый символ, но и предыдущий
 '''
-import Consts
+
 from collections import Counter
 
-def get_statistic(alphabite):
+def get_statistic(alphabite): #ACTG
     def count_symbols(sequence):
-        return dict(Counter(sequence))
+        d = dict(Counter(sequence))
+        for i in d.copy():
+            if i not in alphabite:
+                del d[i]
+        return d
     return count_symbols
 
+
+a = get_statistic('ACTG')
+print(a('JJJHHHUOP'))
 '''
 
 '''
