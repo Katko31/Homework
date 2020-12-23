@@ -17,3 +17,5 @@ def ret_seq(seq: str):
 
 a= input()
 print(ret_seq(a))
+
+print('hi')
