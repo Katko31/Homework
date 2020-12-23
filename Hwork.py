@@ -20,12 +20,3 @@ print(ret_seq(a))
 
 print('hi')
 
-def ret_seq(seq: str):
-    d = {}
-    for i in seq:
-        if i in d:
-            d[i] = d[i] + 1
-        else:
-            d[i] = 1
-
-    return d
