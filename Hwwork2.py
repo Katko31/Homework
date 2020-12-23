@@ -133,6 +133,8 @@ class RNA(Sequence):
             compliment += Consts.RNA_DICT[i]
         return compliment
 
+
+
     def get_transcript(self):
         protein = ''
         i = 0
