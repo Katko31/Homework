@@ -109,6 +109,38 @@ class Sequence: #класс-родитель, в который мы перед�
     def get_mol_mass(self):  # молекулярная масса последовательности
         return Sequence.MOLL_MASS * len(self)
 
+    '''
+     10. Добавить к классу последовательностей метод, который принимает в качестве аргумента функцию,
+    задающую правила замены символов, и который заменяет по этому правилу символы в последовательности
+    '''
+    def changed(self, func):
+        result = ''
+
+        for l in self.seq:
+            result += func(l)
+        return self.__class__(self.name, result)
+
+    '''
+    11. Модифицировать метод из предыдущей задачи так, что функция с правилом замены принимает не только
+        заменяемый символ, но и предыдущий
+    '''
+
+
+    def changed_2(self, func):
+        result = ''
+
+        for i in range(len(self.seq)):
+            prev_letter = None
+            if i > 0:
+                prev_letter = self.seq[i - 1]
+
+            cur_letter = self.seq[i]
+
+            result += func(prev_letter, cur_letter)
+        return self.__class__(self.name, result)
+
+
+
 
 class DNA(Sequence):
 
@@ -127,6 +159,9 @@ class DNA(Sequence):
             transcript += Consts.DNA_RNA_DICT[i]
         return RNA(self.name, transcript) #надо чтобы было видно, какую цепочку я получаю
 
+    def __str__(self):
+        return f'DNA gene name: {self.name}, sequence: {self.seq}'
+
 
 
 class RNA(Sequence):
@@ -139,6 +174,9 @@ class RNA(Sequence):
         for i in self.seq:
             compliment += Consts.RNA_DICT[i]
         return compliment
+
+    def __str__(self):
+        return f'RNA gene name: {self.name}, sequence: {self.seq}'
 
 
 
@@ -167,6 +205,9 @@ class Protein(Sequence):
     def get_mol_mass(self):
         return Protein.MOLL_MASS * len(self)
 
+    def __str__(self):
+        return f'Protein name: {self.name}, sequence: {self.seq}'
+
 
 
 
@@ -194,3 +235,12 @@ print(c.alphabite())
 print(b.get_transcript())
 
 print(a.get_transcript())
+def foo(letter):  #написать другую функцию
+    if letter == "A": return "G"
+    else: return letter
+
+foo2 = lambda prev, current: 'G' if current == 'T' and prev == "T" else current
+print(a)
+print(a.changed_2(foo2))
+
+print(c)
