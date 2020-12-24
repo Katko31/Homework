@@ -63,17 +63,17 @@ class CreateSequence:
     def __new__(cls, name, sequence): #Dna --> RNA --> protein
         if 'U' in sequence:
             rna = RNA(name,sequence)
-            prot = rna.get_protein() #rna.get_transcript()
+            prot = rna.get_protein()
             return None, rna, prot
-            # return DNA()
+
         elif check_prot(sequence):
             return None, None, Protein(name, sequence)
         else:
             dna = DNA(name, sequence)
             rna = dna.get_transcript()
-            prot = rna.get_transcript()  # rna.get_protein()
+            prot = rna.get_protein()
             return dna, rna, prot
-            # return RNA()
+
 
 def check_prot(seq):
     for i in seq:
@@ -178,9 +178,7 @@ class RNA(Sequence):
     def __str__(self):
         return f'RNA gene name: {self.name}, sequence: {self.seq}'
 
-
-
-    def get_transcript(self):
+    def get_protein(self):
         protein = ''
         i = 0
         j = 3
@@ -191,7 +189,7 @@ class RNA(Sequence):
                 j += 3
             else:
                 break
-        return Protein(self.name, protein) #надо чтобы было видно, какую цепочку я получаю
+        return Protein(self.name, protein)
 
 
 class Protein(Sequence):
@@ -209,38 +207,34 @@ class Protein(Sequence):
         return f'Protein name: {self.name}, sequence: {self.seq}'
 
 
-
-
-
-
-#seq = input("Введите последовательность ДНК: ")
-a,b,c = CreateSequence('>NC_011748.1', 'GTAAGTATTTTTCAGCTTTTCATTCTGACTGCAACGGGCAATATGTCTCTGTGTGGATTAAAAAAAGAGT')
-
-if a is None:
-    print('Нет ДНК')
-if b is None:
-    print('Нет РНК')
-if hasattr(a, 'get_transcript'):
-    print(a.get_transcript())
-
-
-
-# print(с.alphabite())
-
-print(a.get_complimentary())
-print(a.get_transcript())
-print(b.get_transcript())
-
-print(c.alphabite())
-print(b.get_transcript())
-
-print(a.get_transcript())
-def foo(letter):  #написать другую функцию
-    if letter == "A": return "G"
+def func1(letter):  #написать другую функцию
+    if letter == "C": return "N"
     else: return letter
 
-foo2 = lambda prev, current: 'G' if current == 'T' and prev == "T" else current
-print(a)
-print(a.changed_2(foo2))
+def func2(prev, current):
+    if current == 'A' and prev == "A": return 'N'
+    else: return current
 
+
+
+a,b,c = CreateSequence('>NC_011748.1', 'GTAAGTATTTTTCAGCTTTTCATTCTGACTGCAACGGGCAATATGTCTCTGTGTGGATTAAAAAAAGAGT')
+
+
+print(a)
+print(b)
 print(c)
+
+print(a.get_complimentary())
+# print(a.get_transcript())
+# print(b.get_transcript())
+#
+# print(c.alphabite())
+# print(b.get_transcript())
+#
+# print(a.get_transcript())
+#
+#
+#
+# print(a)
+# print(a.changed(func1))
+# print(a.changed_2(func2))
