@@ -1,12 +1,13 @@
 '''
-Добавить поддержку интерфейса Sequence для классов из предыдущего домашнего задания
-2.Написать генератор случайных дезоксинуклеотидов, нуклеотидов  и аминокислот.
+7.Написать генератор случайных дезоксинуклеотидов, нуклеотидов  и аминокислот.
 '''
 import Consts
 import random
 dna = sorted(set(Consts.DNA_DICT.values()))
 rna = sorted(set(Consts.RNA_DICT.values()))
-protein = sorted(set(Consts.AMINOACID_DICT.values()))
+p = set(Consts.AMINOACID_DICT.values())
+p.remove('Stop')
+protein = sorted(p)
 
 def get_deoxyribonucleotide(name):
     print(random.choice(dna))
@@ -21,7 +22,7 @@ name = input('Введите название для вашего нуклеот
 get_deoxyribonucleotide(name)
 
 '''
-3.Написать генераторы случайных последовательностей с использованием random.choices/генераторов из предыдущего задания
+8.Написать генераторы случайных последовательностей с использованием random.choices/генераторов из предыдущего задания
 фиксированной длины (1000 символов)/случайной длины в заданном диапазоне (от 10 до 1000 символов).
 '''
 def get_dna_seq(name):
@@ -31,13 +32,6 @@ def get_rna_seq(name):
     print(''.join(random.choices(rna, k = 1000)))
 
 def get_protein(name):
-    print(''.join(random.choices(protein, k = range(10, 1000))))
+    print(''.join(random.choices(protein, k = 1000)))
 
 get_protein(name)
-# a = ''.join(random.choices(dna))
-# print(a)
-# if 'C':
-#     print (5)
-#
-# if 5>2:
-#     print(4)
