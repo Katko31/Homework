@@ -6,6 +6,7 @@
 ее молекулярную массу, а также специфичные функции (возврат комплементарной последовательности,
 транскрипция ДНК -> РНК, трансляция РНК -> белок)'''
 
+
 '''
 DNA ('A', 'T', 'G', 'C')
 Комплиментарность ДНК-ДНК (A=T, G=C, T=A, C=G)
@@ -56,14 +57,33 @@ GCGAGTGTTGAAGTTCGGCGGTACATCAGTGGCAAATGCAGAACGTTTTCTGCGTGTTGCCGATATTCTG
 
 
 '''
-from collections import Counter
+from collections import Counter, abc
 import Consts
+from abc import ABC, abstractmethod
+from functools import wraps
+'''
+Добавить поддержку интерфейса Sequence (из стандартной библиотеки Python) для классов из предыдущего домашнего задания
+'''
+
+
+def counter(func):
+    count = 0
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        nonlocal count
+        count += 1
+        print(f' Функция {func.__name__} была вызвана {count} раз')
+        return func(*args, **kwargs)
+
+    return wrapper
+
 
 class CreateSequence:
-    def __new__(cls, name, sequence): #Dna --> RNA --> protein
+    def __new__(cls, name, sequence):  # Dna --> RNA --> protein
         if 'U' in sequence:
-            rna = RNA(name,sequence)
-            prot = rna.get_protein()
+            rna = RNA(name, sequence)
+            prot = rna.get_transcript()
             return None, rna, prot
 
         elif check_prot(sequence):
@@ -71,7 +91,7 @@ class CreateSequence:
         else:
             dna = DNA(name, sequence)
             rna = dna.get_transcript()
-            prot = rna.get_protein()
+            prot = rna.get_transcript()
             return dna, rna, prot
 
 
@@ -81,38 +101,59 @@ def check_prot(seq):
             return True
     return False
 
-class Sequence: #класс-родитель, в который мы передаем последовательность
+
+def show_seq(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        self = args[0]
+        print(f'Название последовательности {self.name} и сама последовательность {self.seq}')
+        return func(*args, **kwargs)
+
+    return wrapper
+
+
+class Sequence(ABC):  # класс-родитель, в который мы передаем последовательность
     MOLL_MASS = 345
 
     def __init__(self, n, s):
         self.name = n
         self.seq = s
 
-    def alphabite(self):
-        return 'abc'
+    @show_seq
+    def alphabite(self, alpha=None):
+        if alpha is None:
+            return 'abc'
+        return alpha
 
-    def get_name(self): # чтобы возвращалось название последовательности (гена)
+    @show_seq
+    def get_name(self):  # чтобы возвращалось название последовательности (гена)
         return self.name
 
     def get_seq(self):  # чтобы возвращалось сама последовательность
         return self.seq
 
-    def get_len(self): # чтобы возвращалось длина последовательности
+    def get_len(self):  # чтобы возвращалось длина последовательности
         return len(self)
 
-    def __len__(self): # чтобы возвращалось длина последовательности, с использованием magic method
+    def __len__(self):  # чтобы возвращалось длина последовательности, с использованием magic method
         return len(self.seq)
 
-    def statist(self): # чтобы возвращалась статистика по использованным символам
+    def statist(self):  # чтобы возвращалась статистика по использованным символам
         return dict(Counter(self.seq))
 
     def get_mol_mass(self):  # молекулярная масса последовательности
         return Sequence.MOLL_MASS * len(self)
 
+
+    @abstractmethod
+    def get_transcript(self):
+        pass
+
     '''
      10. Добавить к классу последовательностей метод, который принимает в качестве аргумента функцию,
     задающую правила замены символов, и который заменяет по этому правилу символы в последовательности
     '''
+
     def changed(self, func):
         result = ''
 
@@ -125,7 +166,7 @@ class Sequence: #класс-родитель, в который мы перед�
         заменяемый символ, но и предыдущий
     '''
 
-
+    @counter
     def changed_2(self, func):
         result = ''
 
@@ -140,12 +181,10 @@ class Sequence: #класс-родитель, в который мы перед�
         return self.__class__(self.name, result)
 
 
-
-
 class DNA(Sequence):
 
-    def alphabite(self): #свой алфавит (A,T,G,C)
-        return 'A, T, G, C'
+    def alphabite(self):  # свой алфавит (A,T,G,C)
+        return super().alphabite('A, T, G, C')
 
     def get_complimentary(self):
         compliment = ''
@@ -157,17 +196,16 @@ class DNA(Sequence):
         transcript = ''
         for i in self.seq:
             transcript += Consts.DNA_RNA_DICT[i]
-        return RNA(self.name, transcript) #надо чтобы было видно, какую цепочку я получаю
+        return RNA(self.name, transcript)  # надо чтобы было видно, какую цепочку я получаю
 
     def __str__(self):
         return f'DNA gene name: {self.name}, sequence: {self.seq}'
 
 
-
 class RNA(Sequence):
 
-    def alphabite(self): #свой алфавит (A, U, G ,C)
-        return 'A, U, G, C'
+    def alphabite(self):  # свой алфавит (A, U, G ,C)
+        return super().alphabite('A, U, G, C')
 
     def get_complimentary(self):
         compliment = ''
@@ -178,7 +216,7 @@ class RNA(Sequence):
     def __str__(self):
         return f'RNA gene name: {self.name}, sequence: {self.seq}'
 
-    def get_protein(self):
+    def get_transcript(self):
         protein = ''
         i = 0
         j = 3
@@ -206,25 +244,53 @@ class Protein(Sequence):
     def __str__(self):
         return f'Protein name: {self.name}, sequence: {self.seq}'
 
+    def get_transcript(self):
+        return None
 
-def func1(letter):  #написать другую функцию
-    if letter == "C": return "N"
-    else: return letter
+def func1(letter):  # написать другую функцию
+    if letter == "C":
+        return "N"
+    else:
+        return letter
+
 
 def func2(prev, current):
-    if current == 'A' and prev == "A": return 'N'
-    else: return current
+    if current == prev == "A":
+        return 'N'
+    else:
+        return current
 
 
+'''
+12. Написать декоратор, который при использовании с методом последовательности, 
+выводит при каждом вызове метода название последовательности и саму последовательность
+'''
 
-a,b,c = CreateSequence('>NC_011748.1', 'GTAAGTATTTTTCAGCTTTTCATTCTGACTGCAACGGGCAATATGTCTCTGTGTGGATTAAAAAAAGAGT')
+'''
+13. Написать декоратор, который при каждом вызове функции выводит количество ее вызовов
+'''
 
 
-print(a)
-print(b)
+class Sequence2(Sequence):
+    def __init__(self, name, sequence):
+        self.name = name
+        self.sequence = sequence
+
+    @show_seq
+    def length(self):
+        return f'Длина последовательности ' + len(self.seq)
+
+
+a, b, c = CreateSequence('>NC_011748.1', 'GTAAGTATTTTTCAGCTTTTCATTCTGACTGCAACGGGCAATATGTCTCTGTGTGGATTAAAAAAAGAGT')
 print(c)
+# d = Sequence2('>NC_011748.1', 'GTAAGTATTTTTCAGCTTTTCATTC')
+# print(d.length())
+# print(d)
+# print(b)
+# print(c)
 
-print(a.get_complimentary())
+# print(b.get_complimentary())
+
 # print(a.get_transcript())
 # print(b.get_transcript())
 #
@@ -235,6 +301,6 @@ print(a.get_complimentary())
 #
 #
 #
-# print(a)
-# print(a.changed(func1))
+# print(a.alphabite())
+# # print(a.changed(func1))
 # print(a.changed_2(func2))
