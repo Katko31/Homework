@@ -4,46 +4,55 @@
 Предусмотреть обработку исключений программы
 """
 import re
-import Consts
-#пример праймера AC(G/T)T(T/A)GGG(G/A)C
-degenerate_primer1, degenerate_primer2 = input(), input() #запрос на введение двух праймеров. Пример AC(G/T)T(T/A)GGG(G/A)C
+import Dicts
+
+degenerate_primer1, degenerate_primer2 = input(), input() #запрос на введение двух праймеров.
 
 
 def prim_convert(degenerate_primers): #функция, которая преобразует праймер в формат, необходимый для подачи в регулярное выражение
     c = []
 
-    for x in degenerate_primers: #заменяю символы АТГЦ на комплиментарные, и знак / на |
-        if x in '()':
-            c.append(x)
-        elif x in '/':
-            c.append('|')
-        elif x in 'ACGT':
-            c.append(Consts.DNA_DICT[x])
+    for x in degenerate_primers:
+        if x in 'ATCGBDHKMNRSVWY':
+            c.append(Dicts.PRIMER_DICT[x])
         else:
             return ValueError('Неправильный формат записи вырожденного праймера')
     new_s = ''.join(c)
-    #if len(new_s) != len(degenerate_primers):
-     #   raise ValueError('Неправильный формат записи вырожденного праймера')
-    if len(re.findall(r'\(\w\|\w\)', new_s))==int(len(re.findall(r'[\(\)\/]', degenerate_primers)))/3: #это проверка на правильное количество открытых и закрытых скобочек, а также наличие знака | , если есть скобочки. AC(GT)T(TA)GGG(G/A)C что-то такое должно отбраковаться, как неправильный вариант
-        return new_s
-    else:
-        raise ValueError('Неправильный формат записи вырожденного праймера')
+    return new_s
 
+# def find_amplicons(fasta, primer1, primer2):
+#
+#     try:
+#
+#         with open(fasta, "r") as file:
+#             filetext = file.read()
+#             matches1 = re.findall(primer1, filetext)
+#             matches2 = re.findall(primer2, filetext)
+#
+#
+#     except FileNotFoundError:
+#         print("Невозможно открыть файл")
 
-reg_primer1 = 'r' + '\'' + prim_convert(degenerate_primer1) + '\'' #это максимально корявая попытка впихнуть переменную в регулярное выражение. По-другому у меня не выходит
-#reg_primer1 = prim_convert(degenerate_primer1)
-#reg_primer2 = prim_convert(degenerate_primer2)
+reg_primer1 = prim_convert(degenerate_primer1)
+# reg_primer2 = prim_convert(degenerate_primer2)
+
 #print(reg_primer2)
+print(type(reg_primer1))
 print(reg_primer1)
 
 
 try:
 
-    with open("spades_scaffolds.fasta", "r") as file: #это открытие фаста файла
-
-        for line in file:
-            re.findall(reg_primer1, file.readlines())  #это поиск подстроки в строке
-
+    with open('spades_scaffolds.fasta', "r") as file:
+        filetext = file.read()
+        matches = re.findall(reg_primer1, filetext)
+        print(matches)
 
 except FileNotFoundError:
     print("Невозможно открыть файл")
+
+# filetext = 'TTGGGGTAC'
+# matches = re.findall(reg_primer1, )
+# print(matches)
+
+# DACGT
