@@ -6,7 +6,7 @@
 import re
 import Dicts
 
-one_primer, sec_primer = input(), input() #запрос на введение двух праймеров.
+one_primer, sec_primer = input('Введите первый праймер в формате IUPAC: '), input('Введите второй праймер в формате IUPAC: ') #запрос на введение двух праймеров.
 # input 1: ATCGBDTTCGG
 # input 2: GBDHKMRSVW
 
@@ -21,43 +21,33 @@ def prim_convert(degenerate_primers): #функция, которая преоб
     new_s = ''.join(c)
     return new_s
 
-# def find_amplicons(fasta, primer1, primer2):
-#
-#     try:
-#
-#         with open(fasta, "r") as file:
-#             filetext = file.read()
-#             matches1 = re.findall(primer1, filetext)
-#             matches2 = re.findall(primer2, filetext)
-#
-#
-#     except FileNotFoundError:
-#         print("Невозможно открыть файл")
+def find_amplicons (fasta, primer1, primer2):
+
+    try:
+        if primer1 == '' or primer2 == '':
+            print(ValueError('Вы ввели всего один праймер'))
+        else:
+
+            with open(fasta, "r") as file:
+                filetext = file.read()
+                matches1 = re.findall(primer1, filetext)
+                matches2 = re.findall(primer2, filetext)
+            return matches1, matches2
+
+
+    except FileNotFoundError:
+        print("Невозможно открыть файл")
 
 reg_one = prim_convert(one_primer)
 reg_sec = prim_convert(sec_primer)
 
-#print(reg_primer2)
-print(type(reg_one))
-print(reg_one)
-print(reg_sec)
+# print(type(reg_one))
+# print('Праймер 1 преобразованный в регулярное выражение ', reg_one)
+# print('Праймер 2 преобразованный в регулярное выражение ', reg_sec)
 
+amplicons1, amplicons2 = find_amplicons('spades_scaffolds.fasta', reg_one, reg_sec)
+# print (len(amplicons1)) можно без len, тогда будет список
+# print (len(amplicons2))
 
-try:
-
-    with open('spades_scaffolds.fasta', "r") as file:
-        filetext = file.read()
-        matches1 = re.findall(reg_one, filetext)
-        # matches2 = re.findall(reg_sec, filetext)
-        print(matches1)
-        # print(matches2)
-
-
-except FileNotFoundError:
-    print("Невозможно открыть файл")
-
-# filetext = 'TTGGGGTAC'
-# matches = re.findall(reg_primer1, )
-# print(matches)
 
 
