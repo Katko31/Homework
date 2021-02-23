@@ -6,8 +6,9 @@
 import re
 import Dicts
 
-degenerate_primer1, degenerate_primer2 = input(), input() #запрос на введение двух праймеров.
-
+one_primer, sec_primer = input(), input() #запрос на введение двух праймеров.
+# input 1: ATCGBDTTCGGG
+# input 2: GBDHKMRSVW
 
 def prim_convert(degenerate_primers): #функция, которая преобразует праймер в формат, необходимый для подачи в регулярное выражение
     c = []
@@ -33,20 +34,24 @@ def prim_convert(degenerate_primers): #функция, которая преоб
 #     except FileNotFoundError:
 #         print("Невозможно открыть файл")
 
-reg_primer1 = prim_convert(degenerate_primer1)
-# reg_primer2 = prim_convert(degenerate_primer2)
+reg_one = prim_convert(one_primer)
+reg_sec = prim_convert(sec_primer)
 
 #print(reg_primer2)
-print(type(reg_primer1))
-print(reg_primer1)
+print(type(reg_one))
+print(reg_one)
+print(reg_sec)
 
 
 try:
 
     with open('spades_scaffolds.fasta', "r") as file:
         filetext = file.read()
-        matches = re.findall(reg_primer1, filetext)
-        print(matches)
+        matches1 = re.findall(reg_one, filetext)
+        # matches2 = re.findall(reg_sec, filetext)
+        print(matches1)
+        # print(matches2)
+
 
 except FileNotFoundError:
     print("Невозможно открыть файл")
@@ -55,4 +60,4 @@ except FileNotFoundError:
 # matches = re.findall(reg_primer1, )
 # print(matches)
 
-# DACGT
+
