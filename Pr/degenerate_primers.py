@@ -7,7 +7,7 @@ import re
 import Dicts
 
 one_primer, sec_primer = input(), input() #запрос на введение двух праймеров.
-# input 1: ATCGBDTTCGGG
+# input 1: ATCGBDTTCGG
 # input 2: GBDHKMRSVW
 
 def prim_convert(degenerate_primers): #функция, которая преобразует праймер в формат, необходимый для подачи в регулярное выражение
