@@ -6,46 +6,63 @@
 import re
 import Dicts
 
-one_primer, sec_primer = input('Введите первый праймер в формате IUPAC: '), input('Введите второй праймер в формате IUPAC: ') #запрос на введение двух праймеров.
-# input 1: ATCGBDTTCGG
-# input 2: GBDHKMRSVW
+primer1, primer2 = input('Введите первый праймер в формате IUPAC: '), input('Введите второй праймер в формате IUPAC: ') #запрос на введение двух праймеров.
+# input 1: ATCGBDTTC
+# input 2: GBDHKMRSV
 
-def prim_convert(degenerate_primers): #функция, которая преобразует праймер в формат, необходимый для подачи в регулярное выражение
+def regular_shablon(primer1, primer2): #функция, которая преобразует праймер в формат, необходимый для подачи в регулярное выражение
     c = []
+    d = []
 
-    for x in degenerate_primers:
-        if x in 'ATCGBDHKMNRSVWY':
-            c.append(Dicts.PRIMER_DICT[x])
-        else:
-            return ValueError('Неправильный формат записи вырожденного праймера')
-    new_s = ''.join(c)
-    return new_s
+    if primer1 == '' or primer2 == '':
+        raise ValueError('Вы ввели всего один праймер')
+    else:
 
-def find_amplicons (fasta, primer1, primer2):
+        for x in primer1:
+            if x in 'ATCGBDHKMNRSVWY':
+                c.append(Dicts.PRIMER_DICT1[x])
+            else:
+                return ValueError('Неправильный формат записи вырожденного праймера')
+        new_s1 = ''.join(c)
+
+        for x in primer2:
+            if x in 'ATCGBDHKMNRSVWY':
+                d.append(Dicts.PRIMER_DICT2[x])
+            else:
+                return ValueError('Неправильный формат записи вырожденного праймера')
+        new_s2 = ''.join(d)
+
+        frame1 = int(50 - len(primer1) - len(primer2))
+        frame2 = int(150 - len(primer1) - len(primer2))
+
+        reg_shab = new_s1 + '([ATGC]' + '{' + str(frame1) + ',' + str(frame2) + '})' + new_s2
+
+        return reg_shab
+
+def find_amplicons (fasta, shablon):
 
     try:
-        if primer1 == '' or primer2 == '':
-            print(ValueError('Вы ввели всего один праймер'))
-        else:
 
-            with open(fasta, "r") as file:
-                filetext = file.read()
-                matches1 = re.findall(primer1, filetext)
-                matches2 = re.findall(primer2, filetext)
-            return matches1, matches2
-
+        with open(fasta, "r") as file:
+            filetext = file.read()
+            matches = re.findall(shablon, filetext)
+            #matches2 = re.findall(primer2, filetext)
+        return matches
 
     except FileNotFoundError:
         print("Невозможно открыть файл")
 
-reg_one = prim_convert(one_primer)
-reg_sec = prim_convert(sec_primer)
+
+shablon = regular_shablon(primer1, primer2)
+print(shablon)
 
 # print(type(reg_one))
 # print('Праймер 1 преобразованный в регулярное выражение ', reg_one)
 # print('Праймер 2 преобразованный в регулярное выражение ', reg_sec)
 
-amplicons1, amplicons2 = find_amplicons('spades_scaffolds.fasta', reg_one, reg_sec)
+amplicons = find_amplicons('spades_scaffolds.fasta', shablon)
+print(amplicons)
+print(len(amplicons))
 # print (len(amplicons1)) можно без len, тогда будет список
 # print (len(amplicons2))
 

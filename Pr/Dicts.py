@@ -1,4 +1,4 @@
-PRIMER_DICT = {
+PRIMER_DICT1 = {
     'A': 'T',
     'T': 'A',
     'C': 'G',
@@ -13,4 +13,21 @@ PRIMER_DICT = {
     'V': '[TGC]',
     'W': '[TA]',
     'Y': '[GA]',
+}
+
+PRIMER_DICT2 = {
+    'A': 'A',
+    'T': 'T',
+    'C': 'C',
+    'G': 'G',
+    'B': '[CGT]',
+    'D': '[AGT]',
+    'H': '[ACT]',
+    'K': '[GT]',
+    'M': '[AC]',
+    'R': '[AG]',
+    'S': '[CG]',
+    'V': '[ACG]',
+    'W': '[AT]',
+    'Y': '[CT]',
 }
