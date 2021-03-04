@@ -27,8 +27,11 @@ def regular_shablon(primer1, primer2): #функция, которая прео�
         new_s1 = string_for_regular(primer1, Dicts.PRIMER_DICT1)
         new_s2 = string_for_regular(primer2, Dicts.PRIMER_DICT2)
 
-        frame1 = int(int(input('Введите нижнюю границу длины рида: ')) - len(primer1) - len(primer2))
-        frame2 = int(int(input('Введите верхнюю границу длины рида: ')) - len(primer1) - len(primer2))
+        frame1 = int((50) - len(primer1) - len(primer2))
+        frame2 = int((150) - len(primer1) - len(primer2))
+
+        if frame1 > frame2 or frame1 < 0:
+            raise ValueError('Недпустимые значения границ рида')
 
         reg_shab = new_s1 + '([ATGC]' + '{' + str(frame1) + ',' + str(frame2) + '})' + new_s2
 
