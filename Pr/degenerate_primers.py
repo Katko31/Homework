@@ -9,33 +9,31 @@ import Dicts
 
 def string_for_regular(primer, dict):
     c = []
-    for x in primer:
-        if x in 'ATCGBDHKMNRSVWY':
-            c.append(dict[x])
-        else:
-            raise ValueError('Неправильный формат записи вырожденного праймера')
-    new_s = ''.join(c)
+    if primer == '':
+        raise ValueError('Необходимо ввести два праймера')
+    else:
+        for x in primer:
+            if x in 'ATCGBDHKMNRSVWY':
+                c.append(dict[x])
+            else:
+                raise ValueError('Неправильный формат записи вырожденного праймера')
+        new_s = ''.join(c)
     return new_s
 
 
 def regular_shablon(primer1, primer2): #функция, которая преобразует праймер в формат, необходимый для подачи в регулярное выражение
 
-    if primer1 == '' or primer2 == '':
-        raise ValueError('Вы ввели всего один праймер')
-    else:
+    new_s1 = string_for_regular(primer1, Dicts.PRIMER_DICT1)
+    new_s2 = string_for_regular(primer2, Dicts.PRIMER_DICT2)
 
-        new_s1 = string_for_regular(primer1, Dicts.PRIMER_DICT1)
-        new_s2 = string_for_regular(primer2, Dicts.PRIMER_DICT2)
+    frame1 = int((50) - len(primer1) - len(primer2))
+    frame2 = int((150) - len(primer1) - len(primer2))
 
-        frame1 = int((50) - len(primer1) - len(primer2))
-        frame2 = int((150) - len(primer1) - len(primer2))
+    if frame1 > frame2 or frame1 < 0:
+        raise ValueError('Недпустимые значения границ рида')
 
-        if frame1 > frame2 or frame1 < 0:
-            raise ValueError('Недпустимые значения границ рида')
-
-        reg_shab = new_s1 + '([ATGC]' + '{' + str(frame1) + ',' + str(frame2) + '})' + new_s2
-
-        return reg_shab
+    reg_shab = new_s1 + '([ATGC]' + '{' + str(frame1) + ',' + str(frame2) + '})' + new_s2
+    return reg_shab
 
 
 def find_amplicons(fasta, shablon):
