@@ -12,25 +12,25 @@ def show_data(func):
 
     return wrapper
 
-# class DataList(list):   # базовая структура данных лист
-#
-#     # def __init__(self):
-#     #     self.list = []
-#
-#     def __getitem__(self, item):
-#         if item >= len(self):
-#             raise IndexError('Объекта с таким индексом не существует')
-#         return super(DataList, self).__getitem__(item)
-#
-#     def __setitem__(self, item, value):
-#         if item >= len(self):
-#             self.append(value)
-#         else:
-#             super(DataList, self).__setitem__(item, value)
+class DataList(list):   # базовая структура данных лист
 
-# a = DataList([1, 2, 3])
-# a[2] = 10
-# print(a)
+    # def __init__(self):
+    #     self.list = []
+
+    def __getitem__(self, item):
+        if item >= len(self):
+            raise IndexError('Объекта с таким индексом не существует')
+        return super(DataList, self).__getitem__(item)
+
+    def __setitem__(self, item, value):
+        if item >= len(self):
+            self.append(value)
+        else:
+            super(DataList, self).__setitem__(item, value)
+
+a = DataList([1, 2, 3])
+a[2] = 10
+print(a)
 
 class MyQueue:
 
@@ -60,6 +60,7 @@ class MyStek:
     @show_data
     def remove(self):
         return self.data.pop(-1)
+
 
 if __name__ == "__main__":
 
