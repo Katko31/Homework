@@ -58,17 +58,26 @@ class MyList:
                     mid1 = mid1.link
                     i += 1
 
-                    new_element.link = mid1
+
                 else:
+                    new_element.link = mid1
                     break
+
+            if i == position:
+                new_element.link = mid1
+
             mid2 = self.pointer
             i = 0
             while mid2.link:
                 if i != position - 1:
                     mid2 = mid2.link
                     i += 1
+                else:
+
+                    mid2.link = new_element
+                    break
+            if position > i:
                 mid2.link = new_element
-                break
 
     def get_data_value(self, data):
         if self.pointer is None:
