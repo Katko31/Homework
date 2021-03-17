@@ -42,19 +42,25 @@ class MyList:
         end.link = None
 
     def insert(self, new_data, position):
-        new_element = Box(new_data)
-        if self.pointer is None:
-            self.pointer = new_element
-            return
+        if position == 0:
+            self.append_start(new_data)
 
-        mid1 = self.pointer
-        i = 0
-        while mid1.link:
-            if i != position:
-                mid1 = mid1.link
-                i += 1
+        else:
+            new_element = Box(new_data)
+            if self.pointer is None:
+                self.pointer = new_element
+                return
 
-            new_element.link = mid1.link
+            mid1 = self.pointer
+            i = 0
+            while mid1.link:
+                if i != position:
+                    mid1 = mid1.link
+                    i += 1
+
+                    new_element.link = mid1
+                else:
+                    break
             mid2 = self.pointer
             i = 0
             while mid2.link:
@@ -63,7 +69,6 @@ class MyList:
                     i += 1
                 mid2.link = new_element
                 break
-            break
 
     def get_data_value(self, data):
         if self.pointer is None:
@@ -89,16 +94,44 @@ class MyList:
             else:
                 return f'{finder.data}[{i}]'
 
-        return f'{finder.data}[{i}]'
+        if index > i:
+            raise IndexError('Такого индекса нет')
+        else:
+            return f'{finder.data}[{i}]'
 
-    def __getitem__(self, item):
-        return self.pointer.data[item]
+    def remove_data_value(self, data):
+        if self.pointer is None:
+            raise ValueError('Список пуст')
+
+        back = None
+        mid = self.pointer
+
+        while mid != None:
+            if mid.data != data:
+                back = mid.link
+                back = mid
+                mid = mid.link
+
+            elif mid.data == data and mid == self.pointer:
+                self.remove_first_box()
+                break
+
+            else:
+                back.link = mid.link
+                break
 
 
 if __name__ == "__main__":
     a = MyList()
-    a.append_start(12)
+    a.append_end(12)
     a.append_start(11)
     a.append_start(15)
     a.append_start(19)
     print(a.get_index_value(3))
+    print(a.get_data_value(11))
+    a.remove_data_value(12)
+    a.insert(56, 4)
+    print(a.get_data_value(56))
+
+
+
