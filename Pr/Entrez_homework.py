@@ -10,9 +10,6 @@ from Bio import Entrez
 from Bio import Medline
 Entrez.email = "kate.smirnova.2016@gmail.com"
 
-now = datetime.datetime.now()
-prev_year = now.strftime("%d/%m/"+str(int(now.strftime("%Y"))-1))
-
 
 def find_id_by_author(author):
     """находим статьи по заданному автору, сохраняем их в переменную result, возвращаем только список айдишников"""
@@ -38,6 +35,9 @@ def create_key_word_massiv(id):
 def create_id_massiv(key_words):
     """получаем id статей, опубликованных в течении года, поиск осуществляется по дате и найденным ключевым словам"""
     id_list = []
+    now = datetime.datetime.now()
+    prev_year = now.strftime("%d/%m/" + str(int(now.strftime("%Y")) - 1))
+
     for word in key_words:
         with Entrez.esearch(db="pubmed",
                             term=word + " AND ((" + prev_year + "[Date - Completion] : " + "3000" + "[Date - Completion]))") as handle:
