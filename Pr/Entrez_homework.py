@@ -21,6 +21,7 @@ def find_id_by_author(author):
 
 
 def create_key_word_massiv(id):
+    """создает массив из ключевых слов по айдишникам из предыдущей функции"""
     massiv = []
     for i in id:
         with Entrez.efetch(db="pubmed", id=i, retmode="text", rettype="medLine") as handle:
@@ -49,6 +50,7 @@ def create_id_massiv(key_words):
 
 
 def find_gene_ids(id_massiv):
+    """в базе данных gene находит ID генов, с которыми связаны айдишники статей (из предыдущей функции)"""
     spisok = []
     for i in id_massiv:
         with Entrez.elink(dbfrom="pubmed", linkname='pubmed_gene', id=i) as handle:
@@ -60,38 +62,14 @@ def find_gene_ids(id_massiv):
                     spisok.append(number['Id'])
     return spisok
 
-author = input("Введите автора статьи: ")
-id_by_author = find_id_by_author(author)
-key_words = create_key_word_massiv(id_by_author)
-id_massiv = create_id_massiv(key_words)
-gene_ids = find_gene_ids(id_massiv)
-print(len(key_words))
-print(len(id_massiv))
 
-# with Entrez.efetch(db="pubmed", id = id, retmode = "text", rettype = "medLine") as handle:
-#     rt = Medline.read(handle)
-# # result
-# """выводим абстракт и ключевые слова"""
-#
-# print(rt['OT'])
-# print(rt['AB'])
-# key = rt['OT'][0]
-# """получаем сптсок ключевых слов, одно для дальнейшего поиска"""
-#
-# for word in massive:
-#     """получаем id наших новых статей, найденных по ключевым словам"""
-#     with Entrez.esearch(db="pubmed", term=word + " AND ((" + prev_year + "[Date - Completion] : " + "3000" + "[Date - Completion]))") as handle:
-#         rs = Entrez.read(handle)
-#         """поиск новых статей по ключевому слову и дате"""
-#
-# id2 = rs["IdList"][0]
-#
-#
-# spisok = []
-# for i in id_massiv:
-#     with Entrez.elink(dbfrom="pubmed", linkname='pubmed_gene', id=i) as handle:
-#         rlt = Entrez.read(handle)
-#     if len(rlt[0]['LinkSetDb']) > 0 and len(rlt[0]['LinkSetDb'][0]['Link']) > 0:
-#         gene_id_massiv = rlt[0]['LinkSetDb'][0]['Link']
-#         for number in gene_id_massiv:
-#             spisok.append(number['Id'])
+if __name__ == "__main__":
+
+    author = input("Введите автора статьи: ")
+    id_by_author = find_id_by_author(author)
+    key_words = create_key_word_massiv(id_by_author)
+    id_massiv = create_id_massiv(key_words)
+    gene_ids = find_gene_ids(id_massiv)
+    print(len(key_words))
+    print(len(id_massiv))
+    print(len(gene_ids))
