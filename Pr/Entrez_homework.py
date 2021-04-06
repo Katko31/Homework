@@ -48,10 +48,23 @@ def create_id_massiv(key_words):
     return id_list
 
 
+def find_gene_ids(id_massiv):
+    spisok = []
+    for i in id_massiv:
+        with Entrez.elink(dbfrom="pubmed", linkname='pubmed_gene', id=i) as handle:
+            rlt = Entrez.read(handle)
+        if len(rlt[0]['LinkSetDb']) > 0 and len(rlt[0]['LinkSetDb'][0]['Link']) > 0:
+            gene_id_massiv = rlt[0]['LinkSetDb'][0]['Link']
+            for number in gene_id_massiv:
+                if number not in spisok:
+                    spisok.append(number['Id'])
+    return spisok
+
 author = input("Введите автора статьи: ")
 id_by_author = find_id_by_author(author)
 key_words = create_key_word_massiv(id_by_author)
 id_massiv = create_id_massiv(key_words)
+gene_ids = find_gene_ids(id_massiv)
 print(len(key_words))
 print(len(id_massiv))
 
@@ -74,9 +87,11 @@ print(len(id_massiv))
 # id2 = rs["IdList"][0]
 #
 #
-for i in id_massiv:
-    with Entrez.elink(dbfrom="pubmed", linkname='pubmed_gene', id=i) as handle:
-        rlt = Entrez.read(handle)
-    if len(rlt[0]['LinkSetDb']) > 0 and len(rlt[0]['LinkSetDb'][0]['Link']) > 0:
-        print([int(i['Id'])] for i in rlt[0]['LinkSetDb'][0]['Link'])
-
+# spisok = []
+# for i in id_massiv:
+#     with Entrez.elink(dbfrom="pubmed", linkname='pubmed_gene', id=i) as handle:
+#         rlt = Entrez.read(handle)
+#     if len(rlt[0]['LinkSetDb']) > 0 and len(rlt[0]['LinkSetDb'][0]['Link']) > 0:
+#         gene_id_massiv = rlt[0]['LinkSetDb'][0]['Link']
+#         for number in gene_id_massiv:
+#             spisok.append(number['Id'])
