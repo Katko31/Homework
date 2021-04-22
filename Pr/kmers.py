@@ -16,6 +16,9 @@ def nested_list(seq, kmer):
     kmer_table [[Название кмера, количества вхождений, первое вхождение, последнее вхождение, покрытие?], ..., и т.д.]
     """
 
+    if kmer >= 12 or kmer < 1 or sequence == "" or not sequence.isalpha():
+        raise ValueError("Вы ввели некорректную последовательность или значение для k-мера")
+
     table = []
     for i in range(0, len(seq)-kmer+1):
 
@@ -37,9 +40,5 @@ def nested_list(seq, kmer):
 if __name__ == "__main__":
     sequence = input("Введите последовательность: ")
     kmer = int(input("Введите длину k-мера от 1 до 11: "))
-
-    if kmer >= 12 or kmer < 1 or sequence == "" or not sequence.isalpha():
-        raise ValueError("Вы ввели некорректное значение длины k-мера")
-
     table = nested_list(sequence, kmer)
     print(table)
