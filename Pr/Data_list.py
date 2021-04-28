@@ -37,9 +37,11 @@ class MyList:
         if self.pointer is None:
             raise ValueError('Список пуст')
         end = self.pointer
-        while end.link:
+        cutter = None
+        while end.link != None:
+            cutter = end
             end = end.link
-        end.link = None
+        cutter.link = None
 
     def insert(self, new_data, position):
         if position == 0:
@@ -57,8 +59,6 @@ class MyList:
                 if i != position:
                     mid1 = mid1.link
                     i += 1
-
-
                 else:
                     new_element.link = mid1
                     break
@@ -90,6 +90,10 @@ class MyList:
                 i += 1
             else:
                 return f'{data}[{i}]'
+        if finder.data == data:
+            return f'{data}[{i}]'
+        if finder.data != data and finder.link == None:
+            raise ValueError('В списке такого значения нет')
 
     def get_index_value(self, index):
         if self.pointer is None:
@@ -117,7 +121,6 @@ class MyList:
 
         while mid != None:
             if mid.data != data:
-                back = mid.link
                 back = mid
                 mid = mid.link
 
@@ -132,15 +135,14 @@ class MyList:
 
 if __name__ == "__main__":
     a = MyList()
-    a.append_end(12)
-    a.append_start(11)
+
+    a.append_end(3)
+    a.append_start(7)
     a.append_start(15)
+    a.remove_last_box()
     a.append_start(19)
     print(a.get_index_value(3))
     print(a.get_data_value(11))
     a.remove_data_value(12)
     a.insert(56, 4)
     print(a.get_data_value(56))
-
-
-
