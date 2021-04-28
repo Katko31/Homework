@@ -3,69 +3,68 @@
 """
 from functools import wraps
 
+
 def show_data(func):
+
+    """Декоратор, показывает что происходит с данными при выполнении функции, на которую "навешивается"""
     @wraps(func)
     def wrapper(*args, **kwargs):
-        self = args[0]
-        print(f'{self.data}')
-        return func(*args, **kwargs)
+        try:
+            self = args[0]
+            print(f'{self.data}')
+            return func(*args, **kwargs)
+        except TypeError:
+            print('Вы не ввели значение')
 
     return wrapper
 
-class DataList(list):   # базовая структура данных лист
-
-    # def __init__(self):
-    #     self.list = []
-
-    def __getitem__(self, item):
-        if item >= len(self):
-            raise IndexError('Объекта с таким индексом не существует')
-        return super(DataList, self).__getitem__(item)
-
-    def __setitem__(self, item, value):
-        if item >= len(self):
-            self.append(value)
-        else:
-            super(DataList, self).__setitem__(item, value)
-
-a = DataList([1, 2, 3])
-a[2] = 10
-print(a)
 
 class MyQueue:
 
-    def __init__(self):
-        self.data = []
-
-    @show_data
-    def add_new(self, value):
-        self.data.append(value)
-        # print(self.queue)
-        return self.data
-
-    @show_data
-    def remove(self):
-        return self.data.pop(0)
-
-class MyStek:
+    """Очередь - базовая труктура данных. Реализация через массив"""
 
     def __init__(self):
         self.data = []
 
     @show_data
     def add_new(self, value):
+        if value is None:
+            raise TypeError('Вы не ввели значение')
         self.data.append(value)
         return self.data
 
     @show_data
     def remove(self):
-        return self.data.pop(-1)
+        if len(self.data) > 0:
+            return self.data.pop(0)
+        raise IndexError('Очередь пуста')
+
+
+class MyStack:
+
+    """Стек - базовая труктура данных. Реализация через массив"""
+
+    def __init__(self):
+        self.data = []
+
+    @show_data
+    def add_new(self, value):
+        if value is None:
+            raise TypeError('Вы не ввели значение')
+        self.data.append(value)
+        return self.data
+
+    @show_data
+    def remove(self):
+        if len(self.data) > 0:
+            return self.data.pop(-1)
+        raise IndexError('Стек пуст')
 
 
 if __name__ == "__main__":
 
     a = MyQueue()
-    a.add_new(1)
+    a.add_new()
     a.add_new(10)
     a.add_new(111)
 
@@ -73,7 +72,7 @@ if __name__ == "__main__":
     print(a.remove())
     print(a.remove())
 
-    b = MyStek()
+    b = MyStack()
     b.add_new(1)
     b.add_new(10)
     b.add_new(111)
