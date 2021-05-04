@@ -67,18 +67,19 @@ def hash_table(sequence, kmer):
     for i in range(0, len(sequence) - kmer + 1):
         step_kmer = sequence[i:i + kmer]
         ind = kmer_value(step_kmer, kmer)
-        if massiv[ind][0] == 'nill':
-            massiv[ind][0] = step_kmer
-            massiv[ind][1] = 1
-            massiv[ind][2] = i
-            massiv[ind][3] = i
-        elif massiv[ind][0] == step_kmer:
-            massiv[ind][1] += 1
-            massiv[ind][3] = i
-        elif massiv[ind][0] != step_kmer and isinstance(massiv[ind][0], str):
-            massiv[ind] = [massiv[ind], [step_kmer, 1, i, i, 'nill']]
+        table = massiv[ind]
+
+        if table[0] == 'nill':
+            table[0] = step_kmer
+            table[1] = 1
+            table[2] = i
+            table[3] = i
+        elif table[0] == step_kmer:
+            table[1] += 1
+            table[3] = i
+        elif table[0] != step_kmer and isinstance(table[0], str):
+            massiv[ind] = [table, [step_kmer, 1, i, i, 'nill']]
         else:
-            table = massiv[ind]
             for j in range(0, len(table)):
                 if table[j][0] == step_kmer:
                     table[j][1] += 1
